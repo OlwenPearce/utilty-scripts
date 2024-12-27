@@ -65,26 +65,35 @@ function parseEmail(subject, message) {
 function createEvent(eventTitle, startTime, endTime, isAllDay, optionalParams) {
     Logger.log("creating event " + eventTitle + " for date " + startTime + " to " + endTime)
 
-    var event = CalendarApp.getDefaultCalendar().createAllDayEvent(eventTitle, startTime, endTime, optionalParams)
+    if (startTime.getDate() === endTime.getDate()) {
+        var event = CalendarApp.getDefaultCalendar().createAllDayEvent(eventTitle, startTime, optionalParams)
 
-    Logger.log('Event Added: ' + eventTitle + ', ' + startTime + '(ID: ' + event.getId() + ')');
+        Logger.log('Event Added: ' + eventTitle + ', ' + startTime + '(ID: ' + event.getId() + ')');
+    } else {
+        var event = CalendarApp.getDefaultCalendar().createAllDayEvent(eventTitle, startTime, endTime, optionalParams)
+
+        Logger.log('Event Added: ' + eventTitle + ', ' + startTime + '(ID: ' + event.getId() + ')');
+    }
 
     HOLIDAY_CALANDER_IDS.forEach(id => {
-        var savedEvent = CalendarApp.getCalendarById(id).createAllDayEvent(`${MY_NAME}: on leave`, startTime, endTime, optionalParams)
+        if (startTime.getDate() === endTime.getDate()) {
+            var savedEvent = CalendarApp.getCalendarById(id).createAllDayEvent(`${MY_NAME}: on leave`, startTime, optionalParams)
 
-        Logger.log('Event Added: ' + eventTitle + ', ' + startTime + '(ID: ' + savedEvent.getId() + ')');
+            Logger.log('Event Added: ' + savedEvent.getTitle() + ', ' + startTime + '(ID: ' + savedEvent.getId() + ')');
+        } else {
+            var savedEvent = CalendarApp.getCalendarById(id).createAllDayEvent(`${MY_NAME}: on leave`, startTime, endTime, optionalParams)
+
+            Logger.log('Event Added: ' + savedEvent.getTitle() + ', ' + startTime + '(ID: ' + savedEvent.getId() + ')');
+        }
     })
-
 }
 
 function calcDateTime(startDate, endDate) {
     var [startMonth, startDay, startYear] = parseDate(startDate)
     var [endMonth, endDay, endYear] = parseDate(endDate)
 
-    //Although this wil be entered as an all day event, the time for the start/end of the working day is added
-    //To make single days off "valid" events
-    var newDateStart = new Date(startYear, startMonth - 1, startDay, 9,0, 0)
-    var newDateEnd = new Date(endYear, endMonth - 1, endDay, 18, 0, 0)
+    var newDateStart = new Date(startYear, startMonth - 1, startDay)
+    var newDateEnd = new Date(endYear, endMonth - 1, endDay)
 
     return [newDateStart, newDateEnd]
 }
