@@ -10,7 +10,9 @@
 //select emails from workday and containing "time off" + "has been approved"
 GMAIL_LABEL = 'leave-approved'
 DEFAULT_EVENT_TIME = 30
-DATE_FORMAT = 'ROW' // US (m/d/y) or ROW (d/m/y)
+//set to also update a shared or additional calendar
+//e.g. my-shared-calander@gmail.com
+HOLIDAY_CALANDER_ID = null
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -66,6 +68,13 @@ function createEvent(eventTitle, startTime, endTime, isAllDay, optionalParams) {
     var event = CalendarApp.getDefaultCalendar().createAllDayEvent(eventTitle, startTime, endTime, optionalParams)
 
     Logger.log('Event Added: ' + eventTitle + ', ' + startTime + '(ID: ' + event.getId() + ')');
+
+    if (HOLIDAY_CALANDER_ID) {
+        var savedEvent = CalendarApp.getCalendarById(HOLIDAY_CALANDER_ID).createAllDayEvent("[My name]: on leave", startTime, endTime, optionalParams)
+
+        Logger.log('Event Added: ' + eventTitle + ', ' + startTime + '(ID: ' + savedEvent.getId() + ')');
+    }
+
 }
 
 function calcDateTime(startDate, endDate) {
