@@ -21,7 +21,8 @@ Hit save. You should now be able to run "getEmail" to test it (you can mark old/
 to see it work)
 Create a trigger to run the function "getEmail". I selected daily here
 If you want to copy the event into other calendars (e.g. "department holiday calendar") as well as personal calendar,
-set the HOLIDAY_CALENDAR_IDS value (which can be found under this calendars settings) and put your own name in "[My name]: on leave"
+add these to the HOLIDAY_CALENDAR_IDS array and put your own name in "[My name]". The id of a calendar can be found 
+under the "settings" tab for the calendar in question.
 
 #### Letting it run
 This script only looks for unread emails, so remember not to read these automated emails - moving them into a folder 
