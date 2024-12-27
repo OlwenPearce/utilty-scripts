@@ -80,8 +80,11 @@ function createEvent(eventTitle, startTime, endTime, isAllDay, optionalParams) {
 function calcDateTime(startDate, endDate) {
     var [startMonth, startDay, startYear] = parseDate(startDate)
     var [endMonth, endDay, endYear] = parseDate(endDate)
-    var newDateStart = new Date(startYear, startMonth - 1, startDay)
-    var newDateEnd = new Date(endYear, endMonth - 1, endDay)
+
+    //Although this wil be entered as an all day event, the time for the start/end of the working day is added
+    //To make single days off "valid" events
+    var newDateStart = new Date(startYear, startMonth - 1, startDay, 9,0, 0)
+    var newDateEnd = new Date(endYear, endMonth - 1, endDay, 18, 0, 0)
 
     return [newDateStart, newDateEnd]
 }
